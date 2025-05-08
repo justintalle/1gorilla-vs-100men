@@ -75,8 +75,11 @@
   <script>
     function generateNumber() {
       const position = Math.floor(Math.random() * 100) + 1;
-      document.getElementById('position').innerText = position;
-      document.getElementById('description').innerText = getSurvivalDescription(position);
+      const positionElement = document.getElementById('position');
+      const descriptionElement = document.getElementById('description');
+
+      if (positionElement) positionElement.innerText = position;
+      if (descriptionElement) descriptionElement.innerText = getSurvivalDescription(position);
     }
 
     function getSurvivalDescription(num) {
@@ -91,13 +94,20 @@
       if (num >= 81 && num <= 90) return "😎 Now it’s just you versus a gorilla with jelly arms. 75% survival chance.";
       if (num >= 91 && num <= 99) return "🏆 Almost the end. Gorilla's on its last nerve and banana. 90% chance you walk away a legend.";
       if (num === 100) return "👑 Final boss. You finish what 99 others couldn’t. 95% chance of survival and eternal bragging rights.";
+      return "🤔 Something went wrong. Unable to determine your fate.";
     }
 
     function shareToFacebook() {
-      const position = document.getElementById('position').innerText;
-      if (position === "--") return alert("Get your number first!");
-      const url = `https://www.facebook.com/sharer/sharer.php?u=https://yourdomain.com&quote=I'm #${position} in line to fight the gorilla. Find your spot!`;
-      window.open(url, '_blank');
+      const position = document.getElementById('position')?.innerText || "--";
+      if (position === "--") {
+        alert("Get your number first!");
+        return;
+      }
+
+      const url = encodeURIComponent("https://yourdomain.com");
+      const quote = encodeURIComponent(`I'm #${position} in line to fight the gorilla. Find your spot!`);
+      const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${quote}`;
+      window.open(shareUrl, '_blank');
     }
   </script>
 </body>
